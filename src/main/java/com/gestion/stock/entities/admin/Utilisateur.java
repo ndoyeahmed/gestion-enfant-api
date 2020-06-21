@@ -15,7 +15,8 @@ import java.util.List;
 public class Utilisateur extends Auditable<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
     private String login;
     private String password;

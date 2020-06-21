@@ -10,7 +10,8 @@ import java.util.List;
 @Data
 public class Profil {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
     private String libelle;
     private String description;
