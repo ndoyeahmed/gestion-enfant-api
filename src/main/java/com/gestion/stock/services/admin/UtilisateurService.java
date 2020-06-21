@@ -204,6 +204,7 @@ public class UtilisateurService {
             profilUtilisateur.setUtilisateur(utilisateur);
             profilUtilisateur.setProfil(profil);
             profilUtilisateur.setDate(Timestamp.valueOf(LocalDateTime.now()));
+            profilUtilisateurRepository.save(profilUtilisateur);
         }
     }
 }
