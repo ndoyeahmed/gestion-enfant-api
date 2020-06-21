@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Data
 public class ProfilUtilisateur extends Auditable<String> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Timestamp date;
 

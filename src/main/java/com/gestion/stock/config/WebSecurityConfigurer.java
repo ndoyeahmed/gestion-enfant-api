@@ -46,7 +46,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and().addFilterAfter(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/profils").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/forgot-password").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/retrieve-email").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/change-password").permitAll()
