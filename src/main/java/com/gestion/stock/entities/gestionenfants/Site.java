@@ -1,6 +1,7 @@
 package com.gestion.stock.entities.gestionenfants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gestion.stock.entities.Auditable;
 import com.gestion.stock.entities.admin.Utilisateur;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Site {
+public class Site extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
