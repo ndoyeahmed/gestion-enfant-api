@@ -2,9 +2,9 @@ package com.gestion.stock.services.gestionenfants;
 
 import com.gestion.stock.entities.admin.Utilisateur;
 import com.gestion.stock.entities.gestionenfants.*;
+import com.gestion.stock.repositories.admin.UtilisateurRepository;
 import com.gestion.stock.repositories.gestionenfants.*;
 import com.gestion.stock.utils.Utils;
-import com.gestion.stock.web.utils.Utilitaire;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ public class InscriptionService {
     private EnfantRepository enfantRepository;
     private SiteRepository siteRepository;
     private TypeDocumentRepository typeDocumentRepository;
+    private UtilisateurRepository utilisateurRepository;
 
     @Autowired
     public InscriptionService(DossierRepository dossierRepository, DocumentRepository documentRepository,
@@ -36,7 +37,11 @@ public class InscriptionService {
         this.typeDocumentRepository = typeDocumentRepository;
     }
 
-    // begin type document operation
+    @Autowired
+    public void setUtilisateurRepository(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+    }
+// begin type document operation
 
     public TypeDocument addTypeDocument(TypeDocument typeDocument) {
         try {
@@ -190,4 +195,40 @@ public class InscriptionService {
     }
 
     // end inscription
+
+    public void addDefaultSite() {
+        List<Site> sites = siteRepository.findAll();
+        if (sites.isEmpty()) {
+            Site site = new Site();
+            site.setArchive(false);
+            site.setLibelle("Liberté 6");
+            site.setCode(Utils.createCode(site.getLibelle()));
+            site.setUtilisateur(utilisateurRepository.findById(1L).orElse(null));
+
+            Site site2 = new Site();
+            site2.setArchive(false);
+            site2.setLibelle("Sacré coeur 3");
+            site2.setCode(Utils.createCode(site2.getLibelle()));
+            site2.setUtilisateur(utilisateurRepository.findById(1L).orElse(null));
+
+            siteRepository.save(site);
+            siteRepository.save(site2);
+        }
+    }
+
+    public void addDefaultTypeDocument() {
+        List<TypeDocument> typeDocuments = typeDocumentRepository.findAll();
+        if (typeDocuments.isEmpty()) {
+            TypeDocument typeDocument = new TypeDocument();
+            typeDocument.setArchive(false);
+            typeDocument.setLibelle("Carte nationale d'identité");
+
+            TypeDocument typeDocument2 = new TypeDocument();
+            typeDocument2.setArchive(false);
+            typeDocument2.setLibelle("Extrait de naissance");
+
+            typeDocumentRepository.save(typeDocument);
+            typeDocumentRepository.save(typeDocument2);
+        }
+    }
 }

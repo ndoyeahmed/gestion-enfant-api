@@ -2,6 +2,7 @@ package com.gestion.stock;
 
 import com.gestion.stock.config.SpringSecurityAuditorAware;
 import com.gestion.stock.services.admin.UtilisateurService;
+import com.gestion.stock.services.gestionenfants.InscriptionService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +27,8 @@ public class StockApiApplication extends SpringBootServletInitializer implements
 
     private UtilisateurService utilisateurService;
 
+    private InscriptionService inscriptionService;
+
 
     @Bean
     public AuditorAware<String> auditorAware() {
@@ -42,10 +45,17 @@ public class StockApiApplication extends SpringBootServletInitializer implements
         this.utilisateurService = utilisateurService;
     }
 
+    @Autowired
+    public void setInscriptionService(InscriptionService inscriptionService) {
+        this.inscriptionService = inscriptionService;
+    }
+
     @Override
     public void run(String... args) throws Exception {
         log.log(Level.INFO, bCryptPasswordEncoder.encode("passer"));
         utilisateurService.addDefaultAdmin();
+        inscriptionService.addDefaultSite();
+        inscriptionService.addDefaultTypeDocument();
     }
 
     public static void main(String[] args) {

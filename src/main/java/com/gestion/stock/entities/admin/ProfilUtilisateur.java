@@ -1,6 +1,7 @@
 package com.gestion.stock.entities.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gestion.stock.entities.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-public class ProfilUtilisateur {
+public class ProfilUtilisateur extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
