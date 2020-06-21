@@ -35,7 +35,7 @@ public class InscriptionController {
     public InscriptionController(InscriptionService inscriptionService,
                                  UtilisateurService utilisateurService,
                                  Utilitaire utilitaire) {
-        this.inscriptionService  = inscriptionService;
+        this.inscriptionService = inscriptionService;
         this.utilisateurService = utilisateurService;
         this.utilitaire = utilitaire;
     }
@@ -100,21 +100,26 @@ public class InscriptionController {
 
     // site endpoint
 
-    @PostMapping("sites")
-    public ResponseEntity<?> addSites(@RequestBody Site site) {
-        try {
-            if (site == null) throw new  BadRequestException(ENTITY_CANNOT_BE_NULL);
-            if (site.getLibelle() == null || site.getLibelle().trim().equals(""))
-                throw new BadRequestException(LIBELLE_REQUIRED);
-            if (site.getUtilisateur() == null || site.getUtilisateur().getId() == null)
-                throw new BadRequestException("utilisateur required");
+    @PutMapping("sites/archive/{id}")
+    public MappingJacksonValue archiveOrRestoreSite(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        Site site = inscriptionService.findSiteById(id);
+        if (site == null) throw new EntityNotFoundException("site not found");
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(inscriptionService.addSite(site));
-        } catch (Exception e) {
-            log.severe(e.getLocalizedMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(INTERNAL_SERVER_ERROR);
-        }
+        site.setArchive(Boolean.parseBoolean(body.get("archive")));
+
+        return utilitaire.getFilter(inscriptionService.updateSite(site), "passwordFilter", "password");
+    }
+
+    @PostMapping("sites")
+    public MappingJacksonValue addSites(@RequestBody Site site) {
+
+        if (site == null) throw new BadRequestException(ENTITY_CANNOT_BE_NULL);
+        if (site.getLibelle() == null || site.getLibelle().trim().equals(""))
+            throw new BadRequestException(LIBELLE_REQUIRED);
+        if (site.getUtilisateur() == null || site.getUtilisateur().getId() == null)
+            throw new BadRequestException("utilisateur required");
+
+        return utilitaire.getFilter(inscriptionService.addSite(site), "passwordFilter", "password");
     }
 
     @GetMapping("sites/archive/{archive}")
@@ -149,12 +154,12 @@ public class InscriptionController {
         Utilisateur utilisateur = utilisateurService.findUserByIdAndArchiveFalseAndStatutTrue(userId);
         if (utilisateur == null) throw new EntityNotFoundException("user not found");
 
-        return ResponseEntity.ok(inscriptionService.findAllSiteByUtilisateur(utilisateur));
+        return ResponseEntity.ok(inscriptionService.findAllSiteByUtilisateur(utilisateur, false));
     }
 
-    @GetMapping("sites/connected-user")
-    public MappingJacksonValue siteByConnectedUtilisateur() {
-        List<Site> sites = inscriptionService.findAllSiteByUtilisateur(utilisateurService.connectedUser());
+    @GetMapping("sites/connected-user/archive/{archive}")
+    public MappingJacksonValue siteByConnectedUtilisateur(@PathVariable Boolean archive) {
+        List<Site> sites = inscriptionService.findAllSiteByUtilisateur(utilisateurService.connectedUser(), archive);
         return utilitaire.getFilter(sites, "passwordFilter", "password");
     }
 

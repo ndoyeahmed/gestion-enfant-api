@@ -1,8 +1,5 @@
 package com.gestion.stock.web.controllers.admin;
 
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.gestion.stock.entities.admin.Utilisateur;
 import com.gestion.stock.security.TokenProvider;
 import com.gestion.stock.services.admin.UtilisateurService;
@@ -109,6 +106,13 @@ public class UtilisateurController {
     @GetMapping("/utilisateurs/{archive}")
     public MappingJacksonValue allUsers(@PathVariable boolean archive) {
         List<Utilisateur> utilisateurs = utilisateurService.findAllByArchiveFalseAndStatutTrue(archive);
+
+        return utilitaire.getFilter(utilisateurs, "passwordFilter", "password");
+    }
+
+    @GetMapping("/utilisateurs/archive-statut/{archive}/{statut}")
+    public MappingJacksonValue allUsersByArchiveAndStatut(@PathVariable boolean archive, @PathVariable boolean statut) {
+        List<Utilisateur> utilisateurs = utilisateurService.findAllUserByArchiveAndStatut(archive, statut);
 
         return utilitaire.getFilter(utilisateurs, "passwordFilter", "password");
     }

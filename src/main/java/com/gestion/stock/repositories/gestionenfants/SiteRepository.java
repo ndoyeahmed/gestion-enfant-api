@@ -13,7 +13,7 @@ public interface SiteRepository extends JpaRepository<Site, Long> {
 
     Optional<Site> findByCode(String code);
 
-    Optional<List<Site>> findAllByUtilisateurAndArchiveFalse(Utilisateur utilisateur);
+    Optional<List<Site>> findAllByUtilisateurAndArchive(Utilisateur utilisateur, Boolean archive);
 
     Optional<List<Site>> findAllByArchive(Boolean archive);
 }

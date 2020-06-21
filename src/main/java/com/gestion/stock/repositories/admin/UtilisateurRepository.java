@@ -17,4 +17,6 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     Optional<List<Utilisateur>> findAllByArchive(boolean archive);
 
     Optional<Utilisateur> findByIdAndArchiveFalseAndStatutTrue(Long id);
+
+    Optional<List<Utilisateur>> findAllByArchiveAndStatut(boolean archive, boolean statut);
 }

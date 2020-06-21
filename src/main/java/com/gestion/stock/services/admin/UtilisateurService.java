@@ -98,6 +98,11 @@ public class UtilisateurService {
         return utilisateurRepository.findAllByArchive(archive).orElse(new ArrayList<>());
     }
 
+    public List<Utilisateur> findAllUserByArchiveAndStatut(boolean archive, boolean statut) {
+        return utilisateurRepository.findAllByArchiveAndStatut(archive, statut)
+                .orElse(new ArrayList<>());
+    }
+
     public List<Profil> findAllProfil() {
         return profilRepository.findAll();
     }

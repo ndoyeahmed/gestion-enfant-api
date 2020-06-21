@@ -89,6 +89,16 @@ public class InscriptionService {
         }
     }
 
+    public Site updateSite(Site site) {
+        try {
+            siteRepository.save(site);
+            return site;
+        } catch (Exception e) {
+            log.severe(e.getLocalizedMessage());
+            throw e;
+        }
+    }
+
     public Site findSiteById(Long id) {
         return siteRepository.findById(id).orElse(null);
     }
@@ -101,8 +111,8 @@ public class InscriptionService {
         return siteRepository.findAllByArchive(archive).orElse(new ArrayList<>());
     }
 
-    public List<Site> findAllSiteByUtilisateur(Utilisateur utilisateur) {
-        return siteRepository.findAllByUtilisateurAndArchiveFalse(utilisateur)
+    public List<Site> findAllSiteByUtilisateur(Utilisateur utilisateur, Boolean archive) {
+        return siteRepository.findAllByUtilisateurAndArchive(utilisateur, archive)
                 .orElse(new ArrayList<>());
     }
 
