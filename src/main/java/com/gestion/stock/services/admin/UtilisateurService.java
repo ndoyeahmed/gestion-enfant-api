@@ -157,4 +157,53 @@ public class UtilisateurService {
         utilisateurRepository.save(utilisateur);
         return utilisateur;
     }
+
+    private Utilisateur addUserAdmin() {
+        List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+        if (utilisateurs.isEmpty()) {
+            Utilisateur utilisateur = new Utilisateur();
+
+            utilisateur.setAdresse("Ouakam");
+            utilisateur.setArchive(false);
+            utilisateur.setEmail("admin@mail.com");
+            utilisateur.setLogin("admin");
+            utilisateur.setNom("admin");
+            utilisateur.setPassword(encoder.encode("passer"));
+            utilisateur.setPasswordChange(true);
+            utilisateur.setPhoto(null);
+            utilisateur.setPrenom("admin");
+            utilisateur.setStatut(true);
+            utilisateur.setTelephone("774315331");
+
+            utilisateurRepository.save(utilisateur);
+            return utilisateur;
+        } else return null;
+    }
+
+    private Profil addDefaultProfil() {
+        List<Profil> profils = profilRepository.findAll();
+        if (profils.isEmpty()) {
+            Profil profil = new Profil();
+            profil.setDescription("Administrateur");
+            profil.setLibelle("ADMIN");
+            Profil profil2 = new Profil();
+            profil2.setDescription("Simple user");
+            profil2.setLibelle("USER");
+
+            profilRepository.save(profil);
+            profilRepository.save(profil2);
+            return profil;
+        } else return null;
+    }
+
+    public void addDefaultAdmin() {
+        Utilisateur utilisateur = addUserAdmin();
+        Profil profil = addDefaultProfil();
+        if (utilisateur != null && profil != null) {
+            ProfilUtilisateur profilUtilisateur = new ProfilUtilisateur();
+            profilUtilisateur.setUtilisateur(utilisateur);
+            profilUtilisateur.setProfil(profil);
+            profilUtilisateur.setDate(Timestamp.valueOf(LocalDateTime.now()));
+        }
+    }
 }

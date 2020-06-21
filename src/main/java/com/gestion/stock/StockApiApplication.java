@@ -45,6 +45,7 @@ public class StockApiApplication extends SpringBootServletInitializer implements
     @Override
     public void run(String... args) throws Exception {
         log.log(Level.INFO, bCryptPasswordEncoder.encode("passer"));
+        utilisateurService.addDefaultAdmin();
     }
 
     public static void main(String[] args) {
