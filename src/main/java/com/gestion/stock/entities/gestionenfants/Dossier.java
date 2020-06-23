@@ -3,14 +3,17 @@ package com.gestion.stock.entities.gestionenfants;
 import com.gestion.stock.entities.Auditable;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @ToString
-public class Dossier extends Auditable<String> {
+public class Dossier extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +27,7 @@ public class Dossier extends Auditable<String> {
     private Enfant enfant;
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
     private List<Document> documents;
 }
