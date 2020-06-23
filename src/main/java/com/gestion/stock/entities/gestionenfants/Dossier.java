@@ -19,9 +19,11 @@ public class Dossier extends Auditable<String> {
     @Column(columnDefinition = "boolean default false")
     private boolean archive;
 
-    @OneToOne(mappedBy = "dossier")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "enfant", referencedColumnName = "id")
     private Enfant enfant;
 
-    @OneToMany(mappedBy = "dossier")
+    @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
     private List<Document> documents;
 }

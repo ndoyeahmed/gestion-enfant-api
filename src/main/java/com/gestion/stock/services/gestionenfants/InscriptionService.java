@@ -163,6 +163,16 @@ public class InscriptionService {
         return dossierRepository.findByCode(code).orElse(null);
     }
 
+    public List<Dossier> findAllDossierByArchive(boolean archive) {
+        return dossierRepository.findAllByArchiveOrderByCreatedDateDesc(archive)
+                .orElse(new ArrayList<>());
+    }
+
+    public List<Dossier> findAllDossierByArchiveAndSiteUtilisateur(boolean archive, Utilisateur utilisateur) {
+        return dossierRepository.findAllByArchiveAndEnfant_Site_Utilisateur(archive, utilisateur)
+                .orElse(new ArrayList<>());
+    }
+
     // end dossier operation
 
     // begin enfant operation

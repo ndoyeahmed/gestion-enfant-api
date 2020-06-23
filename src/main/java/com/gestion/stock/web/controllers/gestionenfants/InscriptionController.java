@@ -159,8 +159,15 @@ public class InscriptionController {
 
     @GetMapping("sites/connected-user/archive/{archive}")
     public MappingJacksonValue siteByConnectedUtilisateur(@PathVariable Boolean archive) {
-        List<Site> sites = inscriptionService.findAllSiteByUtilisateur(utilisateurService.connectedUser(), archive);
-        return utilitaire.getFilter(sites, "passwordFilter", "password");
+        String[] admin = {"ADMIN"};
+        if (utilisateurService.hasProfile(admin)) {
+            List<Site> sites = inscriptionService.findAllSite(archive);
+            return utilitaire.getFilter(sites, "passwordFilter", "password");
+        } else {
+            List<Site> sites = inscriptionService.findAllSiteByUtilisateur(utilisateurService.connectedUser(), archive);
+            return utilitaire.getFilter(sites, "passwordFilter", "password");
+        }
+
     }
 
     // end site endpoint
@@ -215,6 +222,18 @@ public class InscriptionController {
     // end document endpoint
 
     // dossier endpoint
+
+    @GetMapping("dossiers/archive-utilisateur/{archive}")
+    public MappingJacksonValue dossierListByArchiveAndUtilisateur(@PathVariable Boolean archive) {
+        String[] admin = {"ADMIN"};
+        if (utilisateurService.hasProfile(admin)) {
+            return utilitaire.getFilter(inscriptionService.findAllDossierByArchive(archive), "passwordFilter", "password");
+        } else {
+            return utilitaire.getFilter(inscriptionService
+                            .findAllDossierByArchiveAndSiteUtilisateur(archive, utilisateurService.connectedUser())
+                    , "passwordFilter", "password");
+        }
+    }
 
     @GetMapping("dossiers/id/{id}")
     public ResponseEntity<?> dossierById(@PathVariable Long id) {
@@ -274,7 +293,8 @@ public class InscriptionController {
             if (dossier.getDocuments() == null || dossier.getDocuments().isEmpty())
                 throw new BadRequestException("document required");
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(inscriptionService.inscription(dossier));
+            return ResponseEntity.status(HttpStatus.CREATED).body(utilitaire.getFilter(inscriptionService.inscription(dossier)
+                    , "passwordFilter", "password"));
         } catch (Exception e) {
             log.severe(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur");

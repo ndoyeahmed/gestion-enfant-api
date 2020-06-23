@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gestion.stock.entities.Auditable;
 import com.gestion.stock.entities.admin.Utilisateur;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@ToString
 public class Site extends Auditable<String> {
 
     @Id

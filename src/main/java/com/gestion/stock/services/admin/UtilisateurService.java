@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Log
@@ -161,6 +158,16 @@ public class UtilisateurService {
 
         utilisateurRepository.save(utilisateur);
         return utilisateur;
+    }
+
+    public boolean hasProfile(String[] profils) {
+        Utilisateur utilisateur = connectedUser();
+        for (ProfilUtilisateur pf : utilisateur.getProfilUtilisateurs()) {
+            if (Arrays.asList(profils).contains(pf.getProfil().getLibelle())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Utilisateur addUserAdmin() {

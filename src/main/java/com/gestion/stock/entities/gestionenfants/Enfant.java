@@ -30,8 +30,7 @@ public class Enfant extends Auditable<String> {
     @JoinColumn(name = "site", referencedColumnName = "id")
     private Site site;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "dossier", referencedColumnName = "id")
+    @OneToOne(mappedBy = "enfant")
     @JsonIgnore
     private Dossier dossier;
 }
