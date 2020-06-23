@@ -224,19 +224,19 @@ public class InscriptionController {
     // dossier endpoint
 
     @GetMapping("dossiers/archive-utilisateur/{archive}")
-    public MappingJacksonValue dossierListByArchiveAndUtilisateur(@PathVariable Boolean archive) {
+    public ResponseEntity<?> dossierListByArchiveAndUtilisateur(@PathVariable Boolean archive) {
         try {
             String[] admin = {"ADMIN"};
             if (utilisateurService.hasProfile(admin)) {
-                return utilitaire.getFilter(inscriptionService.findAllDossierByArchive(archive), "passwordFilter", "password");
+                return ResponseEntity.ok(utilitaire.getFilter(inscriptionService.findAllDossierByArchive(archive), "passwordFilter", "password"));
             } else {
-                return utilitaire.getFilter(inscriptionService
+                return ResponseEntity.ok(utilitaire.getFilter(inscriptionService
                                 .findAllDossierByArchiveAndSiteUtilisateur(archive, utilisateurService.connectedUser())
-                        , "passwordFilter", "password");
+                        , "passwordFilter", "password"));
             }
         } catch (Exception e) {
             log.severe(e.getLocalizedMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getLocalizedMessage());
         }
     }
 
