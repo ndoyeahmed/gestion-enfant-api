@@ -27,7 +27,7 @@ public class Dossier extends Auditable<String> implements Serializable {
     private Enfant enfant;
 
     @OneToMany(mappedBy = "dossier", cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     private List<Document> documents;
 }
