@@ -223,6 +223,7 @@ public class InscriptionController {
 
     // dossier endpoint
 
+    @CrossOrigin
     @GetMapping("dossiers/archive-utilisateur/{archive}")
     public ResponseEntity<?> dossierListByArchiveAndUtilisateur(@PathVariable Boolean archive) {
         try {
