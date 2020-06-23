@@ -225,13 +225,18 @@ public class InscriptionController {
 
     @GetMapping("dossiers/archive-utilisateur/{archive}")
     public MappingJacksonValue dossierListByArchiveAndUtilisateur(@PathVariable Boolean archive) {
-        String[] admin = {"ADMIN"};
-        if (utilisateurService.hasProfile(admin)) {
-            return utilitaire.getFilter(inscriptionService.findAllDossierByArchive(archive), "passwordFilter", "password");
-        } else {
-            return utilitaire.getFilter(inscriptionService
-                            .findAllDossierByArchiveAndSiteUtilisateur(archive, utilisateurService.connectedUser())
-                    , "passwordFilter", "password");
+        try {
+            String[] admin = {"ADMIN"};
+            if (utilisateurService.hasProfile(admin)) {
+                return utilitaire.getFilter(inscriptionService.findAllDossierByArchive(archive), "passwordFilter", "password");
+            } else {
+                return utilitaire.getFilter(inscriptionService
+                                .findAllDossierByArchiveAndSiteUtilisateur(archive, utilisateurService.connectedUser())
+                        , "passwordFilter", "password");
+            }
+        } catch (Exception e) {
+            log.severe(e.getLocalizedMessage());
+            throw e;
         }
     }
 
