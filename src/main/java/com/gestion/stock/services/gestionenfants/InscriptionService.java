@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +40,20 @@ public class InscriptionService {
     public void setUtilisateurRepository(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;
     }
+
+    // generate code
+    public String genereCode(Long lastId, String firstCharacter) {
+
+        if (lastId == null) {
+            return firstCharacter + "-" + "00001";
+
+        } else {
+            return firstCharacter + "-" + new DecimalFormat("00000").format(lastId + 1);
+        }
+
+    }
+    // end generate code
+
 // begin type document operation
 
     public TypeDocument addTypeDocument(TypeDocument typeDocument) {
@@ -79,7 +92,7 @@ public class InscriptionService {
 
     public Site addSite(Site site) {
         try {
-            site.setCode(Utils.createCode(site.getLibelle()));
+            site.setCode(genereCode(siteRepository.getMaxId(), "S"));
             site.setArchive(false);
             siteRepository.save(site);
             return site;
@@ -122,7 +135,7 @@ public class InscriptionService {
 
     public Document addDocument(Document document) {
         try {
-            document.setCode(Utils.createCode(document.getLibelle()));
+            document.setCode(genereCode(documentRepository.getMaxId(), "Doc"));
             documentRepository.save(document);
             return document;
         } catch (Exception e) {
@@ -193,17 +206,16 @@ public class InscriptionService {
         try {
             Enfant enfant = dossier.getEnfant();
             List<Document> documents = dossier.getDocuments();
-            enfant.setMatricule(Utils.generateMatricule(enfant.getNom(), enfant.getPrenom(), enfant.getDateNaissance()));
+            enfant.setMatricule(genereCode(enfantRepository.getMaxId(), "E"));
             enfantRepository.save(enfant);
             dossier.setEnfant(enfant);
-            dossier.setLibelle(Utils.generateMatricule
-                    ("Dossier", enfant.getPrenom(),
-                            Timestamp.valueOf(LocalDateTime.now())));
-            dossier.setCode(Utils.createCode(dossier.getLibelle()));
+            dossier.setCode(genereCode(dossierRepository.getMaxId(), "D"));
+            dossier.setLibelle(enfant.getPrenom().trim().substring(0, 3) + "-" + dossier.getCode());
             dossier.setDocuments(null);
             dossierRepository.save(dossier);
             documents.forEach(d -> {
                 d.setDossier(dossier);
+                d.setCode(genereCode(documentRepository.getMaxId(), "Doc"));
                 documentRepository.save(d);
             });
 
